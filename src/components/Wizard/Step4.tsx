@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useWizardStore } from '../../store/useWizardStore';
-import { Globe, Mail, Cloud, Activity, CheckCircle2, Loader2, XCircle } from 'lucide-react';
+import { Globe, Mail, Cloud, Activity, CheckCircle2, Loader2, XCircle, X } from 'lucide-react';
 
 const Step4: React.FC = () => {
   const { data, updateData } = useWizardStore();
   const [isChecking, setIsChecking] = useState(false);
-  const [availability, setAvailability] = useState<'available' | 'unavailable' | null>(null);
+  const [availability, setAvailability] = useState<'available' | 'unavailable' | 'error' | null>(null);
 
   useEffect(() => {
     if (!data.domainName || data.domainName.length < 3) {
@@ -15,10 +15,20 @@ const Step4: React.FC = () => {
 
     const timer = setTimeout(async () => {
       setIsChecking(true);
+      setAvailability(null);
       try {
-        const domain = data.domainName || '';
+        const domain = (data.domainName || '').trim();
+        const apiKey = import.meta.env.VITE_API_NINJAS_KEY;
+        
+        if (!apiKey) {
+          console.error('API Ninjas Key is missing in .env file');
+          setAvailability('error');
+          setIsChecking(false);
+          return;
+        }
+
         // Only check if it looks like a domain (has a dot)
-        if (!domain.includes('.')) {
+        if (!domain.includes('.') || domain.endsWith('.')) {
           setAvailability(null);
           setIsChecking(false);
           return;
@@ -26,20 +36,25 @@ const Step4: React.FC = () => {
 
         const response = await fetch(`https://api.api-ninjas.com/v1/domain?domain=${domain}`, {
           headers: {
-            'X-Api-Key': 'Xzh58q1UPQsPZ8N1XuqpcfUHuIGI7uIcDJvvXcqV'
+            'X-Api-Key': apiKey
           }
         });
         
+        if (!response.ok) {
+          throw new Error(`API returned status ${response.status}`);
+        }
+
         const result = await response.json();
         
-        if (result && typeof result.available !== 'undefined') {
+        // API Ninjas returns { "available": true/false, "domain": "..." }
+        if (result && typeof result.available === 'boolean') {
           setAvailability(result.available ? 'available' : 'unavailable');
         } else {
-          setAvailability(null);
+          setAvailability('error');
         }
       } catch (error) {
-        console.error('Error checking domain:', error);
-        setAvailability(null);
+        console.error('Domain Check Error:', error);
+        setAvailability('error');
       } finally {
         setIsChecking(false);
       }
@@ -94,8 +109,9 @@ const Step4: React.FC = () => {
               value={data.domainName || ''}
               onChange={handleChange}
               className={`w-full px-6 py-4 bg-gray-100 dark:bg-white/5 border rounded-2xl focus:border-primary outline-none transition-all text-gray-950 dark:text-white font-medium ${
-                availability === 'available' ? 'border-green-500/50' : 
-                availability === 'unavailable' ? 'border-red-500/50' : 'border-gray-200 dark:border-white/10'
+                availability === 'available' ? 'border-green-500' : 
+                availability === 'unavailable' ? 'border-red-500' : 
+                availability === 'error' ? 'border-orange-500/50' : 'border-gray-200 dark:border-white/10'
               }`}
               placeholder="e.g. example.com"
             />
@@ -114,7 +130,13 @@ const Step4: React.FC = () => {
             {!isChecking && availability === 'unavailable' && (
               <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center space-x-2 text-red-500">
                 <XCircle size={16} />
-                <span className="text-xs font-bold uppercase tracking-widest">Taken</span>
+                <span className="text-xs font-bold uppercase tracking-widest">Not Available</span>
+              </div>
+            )}
+            {!isChecking && availability === 'error' && (
+              <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center space-x-2 text-orange-500">
+                <Activity size={16} className="animate-pulse" />
+                <span className="text-xs font-bold uppercase tracking-widest">Service Error</span>
               </div>
             )}
             {!isChecking && !availability && data.domainName && data.domainName.length >= 1 && (

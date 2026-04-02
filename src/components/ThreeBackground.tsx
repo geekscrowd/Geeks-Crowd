@@ -2,10 +2,8 @@ import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial, Stars, Float } from '@react-three/drei';
 import * as THREE from 'three';
-import { useThemeStore } from '../store/useThemeStore';
 
 const ParticleField = () => {
-  const { theme } = useThemeStore();
   const ref = useRef<THREE.Points>(null!);
   
   const sphere = useMemo(() => {
@@ -33,11 +31,11 @@ const ParticleField = () => {
       <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
         <PointMaterial
           transparent
-          color={theme === 'dark' ? '#6366f1' : '#4f46e5'}
+          color="#6366f1"
           size={0.005}
           sizeAttenuation={true}
           depthWrite={false}
-          opacity={theme === 'dark' ? 0.6 : 0.3}
+          opacity={0.6}
         />
       </Points>
     </group>
@@ -45,17 +43,16 @@ const ParticleField = () => {
 };
 
 const GeometricShapes = () => {
-  const { theme } = useThemeStore();
   return (
     <>
       <Float speed={2} rotationIntensity={1} floatIntensity={2}>
         <mesh position={[2, 1, -2]}>
           <octahedronGeometry args={[0.5, 0]} />
           <meshStandardMaterial 
-            color={theme === 'dark' ? '#a855f7' : '#9333ea'} 
+            color="#a855f7" 
             wireframe 
             transparent 
-            opacity={theme === 'dark' ? 0.4 : 0.15}
+            opacity={0.4}
           />
         </mesh>
       </Float>
@@ -63,10 +60,10 @@ const GeometricShapes = () => {
         <mesh position={[-3, -1, -3]}>
           <icosahedronGeometry args={[0.8, 0]} />
           <meshStandardMaterial 
-            color={theme === 'dark' ? '#3b82f6' : '#2563eb'} 
+            color="#3b82f6" 
             wireframe 
             transparent 
-            opacity={theme === 'dark' ? 0.4 : 0.15}
+            opacity={0.4}
           />
         </mesh>
       </Float>
@@ -75,16 +72,15 @@ const GeometricShapes = () => {
 };
 
 const ThreeBackground: React.FC = () => {
-  const { theme } = useThemeStore();
   return (
     <div className="h-screen w-full transition-opacity duration-1000">
       <Canvas camera={{ position: [0, 0, 1] }}>
-        <ambientLight intensity={theme === 'dark' ? 0.5 : 1.5} />
-        <pointLight position={[10, 10, 10]} intensity={theme === 'dark' ? 1 : 2} />
+        <ambientLight intensity={0.5} />
+        <pointLight position={[10, 10, 10]} intensity={1} />
         <Stars 
           radius={100} 
           depth={50} 
-          count={theme === 'dark' ? 5000 : 2000} 
+          count={5000} 
           factor={4} 
           saturation={0} 
           fade 

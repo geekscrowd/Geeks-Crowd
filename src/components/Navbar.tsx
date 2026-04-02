@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Code, Menu, X, Sun, Moon } from 'lucide-react';
+import { Code, Menu, X } from 'lucide-react';
 import { useWizardStore } from '../store/useWizardStore';
-import { useThemeStore } from '../store/useThemeStore';
 
 const Navbar: React.FC = () => {
   const { openWizard } = useWizardStore();
-  const { theme, toggleTheme } = useThemeStore();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -56,25 +54,12 @@ const Navbar: React.FC = () => {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white transition-colors duration-200 text-sm font-medium tracking-wide"
+                className="text-gray-300 hover:text-white transition-colors duration-200 text-sm font-medium tracking-wide"
               >
                 {link.name}
               </motion.a>
             ))}
             
-            {/* Theme Toggle */}
-            <motion.button
-              onClick={toggleTheme}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-xl glassmorphism border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-white transition-all"
-              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            >
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-            </motion.button>
-
             <motion.button
               onClick={openWizard}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -87,17 +72,10 @@ const Navbar: React.FC = () => {
             </motion.button>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="flex items-center space-x-4 md:hidden">
             <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg glassmorphism text-gray-600 dark:text-gray-400"
-            >
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
-            <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white transition-colors"
+              className="text-gray-300 hover:text-white transition-colors"
             >
               {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
@@ -112,15 +90,15 @@ const Navbar: React.FC = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glassmorphism border-t border-gray-200 dark:border-white/10"
+            className="md:hidden glassmorphism border-t border-white/10"
           >
-            <div className="px-4 py-6 space-y-4 bg-white dark:bg-surface">
+            <div className="px-4 py-6 space-y-4 bg-surface">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white transition-colors"
+                  className="block text-lg font-medium text-gray-300 hover:text-white transition-colors"
                 >
                   {link.name}
                 </a>

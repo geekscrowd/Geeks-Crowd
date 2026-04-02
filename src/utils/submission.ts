@@ -1,34 +1,52 @@
 import { WizardData } from '../store/useWizardStore';
+import { supabase } from './supabase';
 
 /**
- * Handles the project brief submission.
- * In a real production environment, this would send the data to:
- * 1. A backend API (e.g. /api/leads)
- * 2. A lead capture service (e.g. Formspree, EmailJS)
- * 3. A CRM (e.g. HubSpot, Salesforce)
+ * Handles the project brief submission for Production.
+ * 
+ * Flow:
+ * 1. Inserts the lead into Supabase 'leads' table.
+ * 2. Supabase triggers a webhook or Edge Function to send email via Resend.
  */
 export const submitProjectBrief = async (data: Partial<WizardData>): Promise<boolean> => {
   try {
-    console.log('--- NEW PROJECT BRIEF SUBMITTED ---');
-    console.log('Data collected:', JSON.stringify(data, null, 2));
+    console.log('--- SUBMITTING PROJECT BRIEF TO SUPABASE ---');
 
-    // Simulate an API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Check if Supabase is configured
+    const isSupabaseConfigured = !!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
 
-    // For testing/demo purposes, we'll log it and return success
-    // In production, you would uncomment a fetch call like this:
-    /*
-    const response = await fetch('https://api.geekscrowd.com/v1/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    return response.ok;
-    */
+    if (!isSupabaseConfigured) {
+      console.warn('Supabase not configured. Simulating success in dev environment.');
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      return true;
+    }
+
+    // Insert lead into Supabase
+    const { error } = await supabase
+      .from('leads')
+      .insert([
+        { 
+          project_name: data.projectName || 'Unnamed Project', 
+          client_email: data.email,
+          service_type: data.serviceType,
+          budget_range: data.budgetRange,
+          timeline: data.timeline,
+          tech_stack: data.techStack,
+          features: data.features,
+          domain_status: data.domainStatus,
+          domain_name: data.domainName,
+          raw_data: data 
+        },
+      ]);
+    
+    if (error) {
+      console.error('Supabase insertion error:', error.message);
+      return false;
+    }
 
     return true;
   } catch (error) {
-    console.error('Error submitting project brief:', error);
+    console.error('Critical submission error:', error);
     return false;
   }
 };
