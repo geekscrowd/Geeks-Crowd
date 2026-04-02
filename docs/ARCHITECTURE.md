@@ -72,7 +72,17 @@ The **Geeks Crowd** application is built as a modern, high-performance static si
 
 ### 6.2. Resend Setup
 1.  **Get API Key**: Create an account at [Resend](https://resend.com/) and generate an API key.
-2.  **Supabase Edge Function**: Create an Edge Function in Supabase that listens to `INSERT` events on the `leads` table and sends an email via Resend's API.
+2.  **Verify Domain**: In Resend dashboard, verify your domain (e.g., `geekscrowd.com`) to avoid emails going to spam.
+3.  **Supabase Edge Function**: 
+    - Create a function named `send-lead-email`.
+    - Use the code from [docs/supabase-edge-function.ts](file:///docs/supabase-edge-function.ts).
+    - Set the `RESEND_API_KEY` in Supabase Secrets.
+4.  **Database Webhook**: 
+    - Go to Supabase **Database** > **Webhooks**.
+    - Create a new webhook for the `leads` table.
+    - Set it to trigger on `INSERT`.
+    - Select **HTTP POST** and point it to your Edge Function URL.
+    - Now, every new lead will automatically trigger two emails (one for you and one for the customer).
 
 ### 6.3. Vercel Deployment
 1.  **Environment Variables**: In your Vercel project settings, add:
