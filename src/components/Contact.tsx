@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, CheckCircle, Calculator, Info, User, Mail, MessageSquare, Briefcase } from 'lucide-react';
+import { Send, CheckCircle, Calculator, Info, User, Mail, MessageSquare, Briefcase, Loader2 } from 'lucide-react';
 import { useCurrency } from '../hooks/useCurrency';
+import { submitProjectBrief } from '../utils/submission';
 
 const Contact: React.FC = () => {
   const { currency, formatPrice } = useCurrency();
@@ -16,6 +17,7 @@ const Contact: React.FC = () => {
 
   const [estimatedCost, setEstimatedCost] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const initialBudget = parseInt(formData.budget);
@@ -40,10 +42,28 @@ const Contact: React.FC = () => {
     }));
   }, [currency]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 5000);
+    setIsSubmitting(true);
+
+    const success = await submitProjectBrief({
+      fullName: formData.name,
+      email: formData.email,
+      websitePurpose: formData.service,
+      projectDescription: formData.requirements,
+      budgetRange: `${currency.symbol}${parseInt(formData.budget).toLocaleString()}+`,
+      launchTimeline: formData.timeline,
+      projectName: 'Website Inquiry', // Default name for inquiries
+    });
+
+    setIsSubmitting(false);
+
+    if (success) {
+      setIsSubmitted(true);
+      setTimeout(() => setIsSubmitted(false), 5000);
+    } else {
+      alert('There was an issue submitting your inquiry. Please try again or contact us directly at support@geekscrowd.com.');
+    }
   };
 
   return (
@@ -215,10 +235,20 @@ const Contact: React.FC = () => {
 
                   <button 
                     type="submit"
-                    className="w-full py-5 bg-primary text-white font-bold text-lg rounded-2xl shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all flex items-center justify-center space-x-3 transform hover:-translate-y-1"
+                    disabled={isSubmitting}
+                    className="w-full py-5 bg-primary text-white font-bold text-lg rounded-2xl shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all flex items-center justify-center space-x-3 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <span>Send Project Inquiry</span>
-                    <Send size={20} />
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="animate-spin" size={20} />
+                        <span>Sending Inquiry...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Send Project Inquiry</span>
+                        <Send size={20} />
+                      </>
+                    )}
                   </button>
                 </motion.form>
               ) : (
