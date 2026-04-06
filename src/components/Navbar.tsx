@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
   const handleScheduleMeeting = () => {
     if (window.Calendly) {
       window.Calendly.initPopupWidget({ 
-        url: 'https://calendly.com/geekscrowd0/30min',
+        url: 'https://calendly.com/geekscrowd/30min',
         parentElement: document.getElementById('root'),
         prefill: {},
         utm: {},
