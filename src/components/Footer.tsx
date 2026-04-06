@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Code, Mail, Phone, MapPin, Linkedin, Twitter, Github, Instagram, ArrowUp, Facebook } from 'lucide-react';
 
+import { Link } from 'react-router-dom';
+
 const Footer: React.FC = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -111,8 +113,8 @@ const Footer: React.FC = () => {
             &copy; {currentYear} Geeks Crowd. All rights reserved.
           </p>
           <div className="flex space-x-8 text-sm font-bold text-gray-500 dark:text-gray-500 uppercase tracking-widest">
-            <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
+            <Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
           </div>
           <button
             onClick={scrollToTop}

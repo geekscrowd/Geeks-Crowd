@@ -8,31 +8,48 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import WizardContainer from './components/Wizard/WizardContainer';
 import ThreeBackground from './components/ThreeBackground';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+const MainLayout: React.FC = () => {
+  return (
+    <>
+      <Hero />
+      <Services />
+      <Portfolio />
+      <Testimonials />
+      <Contact />
+    </>
+  );
+};
 
 const App: React.FC = () => {
   return (
-    <div className="relative min-h-screen bg-background text-white">
-      {/* Wizard Overlay */}
-      <WizardContainer />
+    <Router>
+      <div className="relative min-h-screen bg-background text-white">
+        {/* Wizard Overlay */}
+        <WizardContainer />
 
-      {/* Background Layer */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
-        <ThreeBackground />
-      </div>
+        {/* Background Layer */}
+        <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
+          <ThreeBackground />
+        </div>
 
-      {/* Content Layer */}
-      <div className="relative z-10">
-        <Navbar />
-        <main>
-          <Hero />
-          <Services />
-          <Portfolio />
-          <Testimonials />
-          <Contact />
-        </main>
-        <Footer />
+        {/* Content Layer */}
+        <div className="relative z-10">
+          <Navbar />
+          <main>
+            <Routes>
+              <Route path="/" element={<MainLayout />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
       </div>
-    </div>
+    </Router>
   );
 };
 
