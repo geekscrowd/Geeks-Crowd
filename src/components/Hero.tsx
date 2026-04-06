@@ -1,10 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Rocket, Shield, Globe, Cpu } from 'lucide-react';
+import { Rocket, Shield, Globe, Cpu, Calendar } from 'lucide-react';
 import { useWizardStore } from '../store/useWizardStore';
 
 const Hero: React.FC = () => {
   const { openWizard } = useWizardStore();
+
+  const handleScheduleMeeting = () => {
+    if (window.Calendly) {
+      window.Calendly.initPopupWidget({ 
+        url: 'https://calendly.com/geekscrowd0/30min',
+        parentElement: document.getElementById('root'),
+        prefill: {},
+        utm: {},
+        color: '#6366f1',
+        textColor: '#ffffff',
+        backgroundColor: '#030712'
+      });
+    }
+  };
   const [headlineIndex, setHeadlineIndex] = useState(0);
   const headlines = [
     "Bridging AI-Assisted Development with Secure Deployment.",
@@ -92,6 +106,13 @@ const Hero: React.FC = () => {
               className="w-full sm:w-auto px-10 py-5 bg-primary text-white text-lg font-bold rounded-2xl shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all transform hover:-translate-y-1"
             >
               Start Your Project
+            </button>
+            <button 
+              onClick={handleScheduleMeeting}
+              className="w-full sm:w-auto px-10 py-5 glassmorphism text-gray-900 dark:text-white text-lg font-bold rounded-2xl border border-gray-200 dark:border-white/20 hover:border-gray-300 dark:hover:border-white/40 transition-all transform hover:-translate-y-1 flex items-center justify-center space-x-3"
+            >
+              <Calendar size={24} />
+              <span>Schedule Meeting</span>
             </button>
             <button 
               onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}

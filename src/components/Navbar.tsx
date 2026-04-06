@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Code, Menu, X } from 'lucide-react';
+import { Code, Menu, X, Calendar } from 'lucide-react';
 import { useWizardStore } from '../store/useWizardStore';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+declare global {
+  interface Window {
+    Calendly: any;
+  }
+}
 
 const Navbar: React.FC = () => {
   const { openWizard } = useWizardStore();
@@ -10,6 +16,20 @@ const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const handleScheduleMeeting = () => {
+    if (window.Calendly) {
+      window.Calendly.initPopupWidget({ 
+        url: 'https://calendly.com/geekscrowd0/30min',
+        parentElement: document.getElementById('root'),
+        prefill: {},
+        utm: {},
+        color: '#6366f1',
+        textColor: '#ffffff',
+        backgroundColor: '#030712'
+      });
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,6 +105,18 @@ const Navbar: React.FC = () => {
             ))}
             
             <motion.button
+              onClick={handleScheduleMeeting}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center space-x-2 text-gray-300 hover:text-primary transition-colors font-semibold text-sm"
+            >
+              <Calendar size={18} />
+              <span>Schedule Meeting</span>
+            </motion.button>
+            
+            <motion.button
               onClick={openWizard}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -116,7 +148,7 @@ const Navbar: React.FC = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden glassmorphism border-t border-white/10"
           >
-            <div className="px-4 py-6 space-y-4 bg-surface">
+            <div className="px-4 py-6 space-y-6 bg-surface">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
@@ -130,6 +162,18 @@ const Navbar: React.FC = () => {
                   {link.name}
                 </a>
               ))}
+              
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleScheduleMeeting();
+                }}
+                className="flex items-center space-x-3 text-primary font-bold text-lg"
+              >
+                <Calendar size={24} />
+                <span>Schedule Meeting</span>
+              </button>
+
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);

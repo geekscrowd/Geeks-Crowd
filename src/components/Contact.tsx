@@ -1,11 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, CheckCircle, Calculator, Info, User, Mail, MessageSquare, Briefcase, Loader2 } from 'lucide-react';
+import { Send, CheckCircle, Calculator, Info, User, Mail, MessageSquare, Briefcase, Loader2, Calendar } from 'lucide-react';
 import { useCurrency } from '../hooks/useCurrency';
 import { submitProjectBrief } from '../utils/submission';
 
 const Contact: React.FC = () => {
   const { currency, formatPrice } = useCurrency();
+  
+  const handleScheduleMeeting = () => {
+    if (window.Calendly) {
+      window.Calendly.initPopupWidget({ 
+        url: 'https://calendly.com/geekscrowd0/30min',
+        parentElement: document.getElementById('root'),
+        prefill: {},
+        utm: {},
+        color: '#6366f1',
+        textColor: '#ffffff',
+        backgroundColor: '#030712'
+      });
+    }
+  };
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -124,6 +138,15 @@ const Contact: React.FC = () => {
                   <CheckCircle className="text-green-500 w-5 h-5" />
                   <span className="text-sm text-gray-500 dark:text-gray-400">Final quote provided after detailed discovery phase.</span>
                 </div>
+                
+                {/* Calendly CTA in Card */}
+                <button
+                  onClick={handleScheduleMeeting}
+                  className="w-full py-4 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 rounded-2xl font-bold transition-all flex items-center justify-center space-x-3"
+                >
+                  <Calendar size={20} />
+                  <span>Or Schedule a Call Now</span>
+                </button>
               </div>
             </motion.div>
           </div>
