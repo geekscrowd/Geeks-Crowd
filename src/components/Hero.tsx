@@ -93,7 +93,10 @@ const Hero: React.FC = () => {
             >
               Start Your Project
             </button>
-            <button className="w-full sm:w-auto px-10 py-5 glassmorphism text-gray-900 dark:text-white text-lg font-bold rounded-2xl border border-gray-200 dark:border-white/20 hover:border-gray-300 dark:hover:border-white/40 transition-all transform hover:-translate-y-1">
+            <button 
+              onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
+              className="w-full sm:w-auto px-10 py-5 glassmorphism text-gray-900 dark:text-white text-lg font-bold rounded-2xl border border-gray-200 dark:border-white/20 hover:border-gray-300 dark:hover:border-white/40 transition-all transform hover:-translate-y-1"
+            >
               View Our Work
             </button>
           </motion.div>

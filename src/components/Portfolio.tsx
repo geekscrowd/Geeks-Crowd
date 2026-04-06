@@ -47,13 +47,6 @@ const Portfolio: React.FC = () => {
               Proven Track Record of Innovation
             </motion.h2>
           </div>
-          <motion.button
-            whileHover={{ x: 10 }}
-            className="flex items-center space-x-2 text-primary font-bold text-lg hover:text-gray-900 dark:hover:text-white transition-colors"
-          >
-            <span>View All Projects</span>
-            <ArrowRight size={24} />
-          </motion.button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -90,12 +83,6 @@ const Portfolio: React.FC = () => {
                       {tag}
                     </span>
                   ))}
-                </div>
-                <div className="pt-6 flex items-center space-x-6 border-t border-gray-200 dark:border-white/5">
-                  <button className="flex items-center space-x-2 text-sm font-bold text-primary hover:text-gray-900 dark:hover:text-white transition-colors">
-                    <ExternalLink size={18} />
-                    <span>Live Demo</span>
-                  </button>
                 </div>
               </div>
             </motion.div>

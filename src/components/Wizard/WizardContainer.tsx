@@ -71,7 +71,24 @@ const WizardContainer: React.FC = () => {
     };
   }, [isOpen]);
 
+  const validateStep = (step: number): boolean => {
+    switch (step) {
+      case 1:
+        return !!(data.fullName && data.email && data.phone && data.projectName && data.websitePurpose && data.launchTimeline);
+      case 5:
+        return !!(data.budgetRange && data.paymentMilestones);
+      default:
+        return true;
+    }
+  };
+
+  const canProceed = validateStep(currentStep);
+
   const handleSubmit = async () => {
+    if (!validateStep(5)) {
+      alert('Please fill in all mandatory fields before submitting.');
+      return;
+    }
     setIsSubmitting(true);
     const success = await submitProjectBrief(data);
     setIsSubmitting(false);
@@ -191,34 +208,31 @@ const WizardContainer: React.FC = () => {
 
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => setStep(Math.min(steps.length, currentStep + 1))}
-                disabled={isSubmitting}
-                className={`flex items-center space-x-2 px-8 py-3 bg-primary text-white rounded-xl font-bold shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all transform hover:-translate-y-1 disabled:opacity-50 ${
+                onClick={() => {
+                  if (!canProceed) {
+                    alert('Please fill in all mandatory fields before proceeding.');
+                    return;
+                  }
+                  setStep(Math.min(steps.length, currentStep + 1));
+                }}
+                disabled={isSubmitting || !canProceed}
+                className={`flex items-center space-x-2 px-8 py-3 bg-primary text-white rounded-xl font-bold shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale disabled:shadow-none ${
                   currentStep === steps.length ? 'hidden' : ''
                 }`}
               >
-                <span>Continue</span>
+                <span>Next Step</span>
                 <ChevronRight size={20} />
               </button>
 
               <button
                 onClick={handleSubmit}
-                disabled={isSubmitting}
-                className={`flex items-center space-x-2 px-8 py-3 bg-green-600 text-white rounded-xl font-bold shadow-xl shadow-green-600/20 hover:shadow-green-600/40 transition-all transform hover:-translate-y-1 disabled:opacity-50 ${
+                disabled={isSubmitting || !canProceed}
+                className={`flex items-center space-x-2 px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-bold shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale disabled:shadow-none ${
                   currentStep !== steps.length ? 'hidden' : ''
                 }`}
               >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 size={20} className="animate-spin" />
-                    <span>Submitting...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Submit Brief</span>
-                    <CheckCircle2 size={20} />
-                  </>
-                )}
+                {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : <CheckCircle2 size={20} />}
+                <span>{isSubmitting ? 'Submitting...' : 'Complete Project Brief'}</span>
               </button>
             </div>
           </div>

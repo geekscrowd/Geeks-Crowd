@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Code, Mail, Phone, MapPin, Linkedin, Twitter, Github, Instagram, ArrowUp } from 'lucide-react';
+import { Code, Mail, Phone, MapPin, Linkedin, Twitter, Github, Instagram, ArrowUp, Facebook } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const scrollToTop = () => {
@@ -8,6 +8,13 @@ const Footer: React.FC = () => {
   };
 
   const currentYear = new Date().getFullYear();
+
+  const socialLinks = [
+    { Icon: Github, href: 'https://github.com/Geeks-Crowd' },
+    { Icon: Linkedin, href: 'https://in.linkedin.com/company/geekscrowd' },
+    { Icon: Instagram, href: 'https://www.instagram.com/geekscrowd/' },
+    { Icon: Facebook, href: 'https://www.facebook.com/people/Geeks-Crowd/100082921972103/#' },
+  ];
 
   return (
     <footer className="pt-32 pb-16 relative overflow-hidden bg-gray-100 dark:bg-surface transition-colors duration-300">
@@ -29,10 +36,12 @@ const Footer: React.FC = () => {
               scalable deployment expertise.
             </p>
             <div className="flex space-x-6">
-              {[Linkedin, Twitter, Github, Instagram].map((Icon, i) => (
+              {socialLinks.map(({ Icon, href }, i) => (
                 <motion.a
                   key={i}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.2, color: '#6366f1' }}
                   className="text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-white transition-colors"
                 >
@@ -82,15 +91,15 @@ const Footer: React.FC = () => {
             <ul className="space-y-6">
               <li className="flex items-start space-x-4">
                 <Mail className="text-primary w-6 h-6 flex-shrink-0" />
-                <span className="text-gray-600 dark:text-gray-400 text-lg font-medium">hello@geekscrowd.com</span>
+                <span className="text-gray-600 dark:text-gray-400 text-lg font-medium">support@geekscrowd.com</span>
               </li>
               <li className="flex items-start space-x-4">
                 <Phone className="text-primary w-6 h-6 flex-shrink-0" />
-                <span className="text-gray-600 dark:text-gray-400 text-lg font-medium">+1 (555) 000-0000</span>
+                <span className="text-gray-600 dark:text-gray-400 text-lg font-medium">+91-8376029127</span>
               </li>
               <li className="flex items-start space-x-4">
                 <MapPin className="text-primary w-6 h-6 flex-shrink-0" />
-                <span className="text-gray-600 dark:text-gray-400 text-lg font-medium">123 Tech Avenue, Silicon Valley, CA 94025</span>
+                <span className="text-gray-600 dark:text-gray-400 text-lg font-medium">A18 Sudarshan park, New Delhi 110015</span>
               </li>
             </ul>
           </div>
