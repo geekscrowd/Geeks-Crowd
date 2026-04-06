@@ -28,11 +28,14 @@ export const submitProjectBrief = async (data: Partial<WizardData>): Promise<boo
         { 
           project_name: data.projectName || 'Unnamed Project', 
           client_email: data.email,
-          service_type: data.serviceType,
+          service_type: data.websitePurpose || 'Not Specified',
           budget_range: data.budgetRange,
-          timeline: data.timeline,
-          tech_stack: data.techStack,
-          features: data.features,
+          timeline: data.launchTimeline,
+          tech_stack: [
+            ...(data.frameworkRequirements ? [data.frameworkRequirements] : []),
+            ...(data.integrations || [])
+          ],
+          features: data.featuresChecklist || [],
           domain_status: data.domainStatus,
           domain_name: data.domainName,
           raw_data: data 

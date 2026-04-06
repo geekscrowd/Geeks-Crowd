@@ -10,16 +10,16 @@ serve(async (req) => {
     // 1. Send Notification to Admin (Geeks Crowd)
     await resend.emails.send({
       from: 'Geeks Crowd <info@geekscrowd.com>', 
-      to: 'geekscrowd0@gmail.com',
+      to: 'geeksccrowd0@gmail.com',
       subject: `🚀 New Lead: ${record.project_name || 'New Project Request'}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
           <h1 style="color: #6366f1; border-bottom: 2px solid #6366f1; padding-bottom: 10px;">New Lead Captured</h1>
           <p><strong>Project Name:</strong> ${record.project_name || 'Unnamed'}</p>
           <p><strong>Client Email:</strong> <a href="mailto:${record.client_email}">${record.client_email}</a></p>
-          <p><strong>Service:</strong> ${record.service_type}</p>
-          <p><strong>Budget:</strong> ${record.budget_range}</p>
-          <p><strong>Timeline:</strong> ${record.timeline}</p>
+          <p><strong>Service:</strong> ${record.service_type || 'Not specified'}</p>
+          <p><strong>Budget:</strong> ${record.budget_range || 'Not specified'}</p>
+          <p><strong>Timeline:</strong> ${record.timeline || 'Not specified'}</p>
           <p><strong>Tech Stack:</strong> ${record.tech_stack?.join(', ') || 'N/A'}</p>
           <p><strong>Required Features:</strong> ${record.features?.join(', ') || 'N/A'}</p>
           <p><strong>Domain Status:</strong> ${record.domain_status || 'N/A'}</p>

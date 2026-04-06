@@ -75,7 +75,7 @@ The **Geeks Crowd** application is built as a modern, high-performance static si
 2.  **Verify Domain**: In Resend dashboard, verify your domain (e.g., `geekscrowd.com`) to avoid emails going to spam.
 3.  **Supabase Edge Function**: 
     - Create a function named `send-lead-email`.
-    - Use the code from [docs/supabase-edge-function.ts](file:///docs/supabase-edge-function.ts).
+    - Use the code from [supabase/functions/send-lead-email/index.ts](file:///supabase/functions/send-lead-email/index.ts).
     - Set the `RESEND_API_KEY` in Supabase Secrets.
 4.  **Database Webhook**: 
     - Go to Supabase **Database** > **Webhooks**.
